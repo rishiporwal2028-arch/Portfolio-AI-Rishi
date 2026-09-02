@@ -10,6 +10,8 @@ interface NavbarProps {
   companies: PortfolioCompany[];
   notifications: NotificationItem[];
   onMarkNotificationRead: (id: string) => void;
+  isDark: boolean;
+  onToggleDark: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -21,6 +23,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   companies,
   notifications,
   onMarkNotificationRead,
+  isDark,
+  onToggleDark,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -141,6 +145,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Right Controls */}
       <div className="flex items-center gap-2 md:gap-3">
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={onToggleDark}
+          className="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer"
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          <span className="material-symbols-outlined text-xl">
+            {isDark ? 'light_mode' : 'dark_mode'}
+          </span>
+        </button>
+
         {/* Onboard Company Button */}
         <button
           onClick={onOpenAddCompany}

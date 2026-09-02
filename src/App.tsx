@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { Sidebar, ActiveTab } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
@@ -21,6 +21,25 @@ export function App() {
     organizationId: 'org-1',
     avatarUrl: '',
   });
+
+  // Dark mode state
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem('theme-dark');
+    if (saved !== null) return saved === 'true';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  const toggleDark = useCallback(() => {
+    setIsDark((prev) => {
+      localStorage.setItem('theme-dark', String(!prev));
+      return !prev;
+    });
+  }, []);
+
+  // Apply the dark class to the root element
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -222,6 +241,8 @@ export function App() {
         companies={companies}
         notifications={notifications}
         onMarkNotificationRead={handleMarkNotificationRead}
+        isDark={isDark}
+        onToggleDark={toggleDark}
       />
 
       <div className="flex-1 flex overflow-hidden">
